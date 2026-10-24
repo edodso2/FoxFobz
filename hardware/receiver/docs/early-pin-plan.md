@@ -1,3 +1,5 @@
+> **Stale — pre-schematic planning.** The board uses DRV8873**H** (hardware-configured, no SPI); see [ADR 0007](../../../docs/decisions/0007-receiver-4-layer-drv8873h.md). The KiCad schematic is the source of truth for pin assignments. Kept for history.
+
 # MDBT50Q-1MV2 Pin Assignments — Receiver Board
 
 ## SPI Bus (DRV8873 Motor Drivers)

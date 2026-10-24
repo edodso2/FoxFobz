@@ -55,7 +55,7 @@ dependencies:
 
 All UUIDs and payload bytes live in `lib/constants/ble_constants.dart`. Never inline them.
 
-See [ble-protocol.md](ble-protocol.md) for the full protocol spec and UUID values.
+See [ble-protocol.md](../../docs/protocol/ble-protocol.md) for the full protocol spec and UUID values.
 
 ---
 

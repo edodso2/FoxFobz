@@ -1,3 +1,5 @@
+> **Note:** the fob now uses the MDBT42TV-PAT ([ADR 0003](../../decisions/0003-mdbt42t-fob.md)), so the fob row below should reference the MDBT42T FCC ID, not the MDBT50Q.
+
 # Phase 6 — Compliance
 
 **Goal:** Meet minimum FCC requirements to legally sell in the US.

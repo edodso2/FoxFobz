@@ -1,3 +1,5 @@
+> **Draft.** v3 changes vs v2 are recorded in [ADR 0003](../decisions/0003-mdbt42t-fob.md). Everything else in [plan-v2.md](plan-v2.md) still stands.
+
 # BLE Key Fob Plan V3
 
 Use FCC pre-certified Raytac chips so all we have to do is put contains text on housing/fob. 

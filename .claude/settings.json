@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(firmware/scripts/build.sh:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter test:*)",
+      "Bash(kicad-cli:*)",
+      "mcp__dart__add_roots",
+      "mcp__dart__pub",
+      "mcp__dart__analyze_files",
+      "WebFetch(domain:docs.zephyrproject.org)",
+      "WebFetch(domain:docs.nordicsemi.com)",
+      "WebFetch(domain:www.raytac.com)",
+      "WebFetch(domain:raytac.blog)",
+      "Read(//Users/ericdodson/ncs/**)"
+    ]
+  }
+}

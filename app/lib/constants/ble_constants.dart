@@ -1,6 +1,6 @@
 // BLE UUIDs and payload bytes for the fob hub protocol.
-// These values must match the firmware on the nRF52840 receiver.
-// Update the UUID strings below to match your device's advertised values.
+// Mirrors firmware/common/include/foxfobz/protocol.h (the source of truth);
+// spec: docs/protocol/ble-protocol.md. Change all three together.
 abstract final class BleConstants {
   // Service UUID advertised by the receiver.
   static const String commandServiceUuid = '46F00001-4200-4C45-9876-ABCDEF000000';

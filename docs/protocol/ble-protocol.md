@@ -1,8 +1,14 @@
-# BLE Protocol — App ↔ Receiver
+# BLE Protocol — App ↔ Receiver ↔ Fob
 
-This document defines the BLE interface between the Flutter app (Central) and the nRF52840 receiver (Peripheral). The receiver firmware is the source of truth — if there is a conflict between this doc and the firmware, the firmware wins.
+This document defines the BLE interfaces between the Flutter app (Central), the nRF52840 receiver (Peripheral + Observer) and the nRF52805 fob (Broadcaster).
 
-**UUID values are defined in `lib/constants/ble_constants.dart`.** They are never hardcoded in UI or logic files.
+**Source of truth for on-air values:** [`firmware/common/include/foxfobz/protocol.h`](../../firmware/common/include/foxfobz/protocol.h) — shared by both firmware apps. The app mirrors them in [`app/lib/constants/ble_constants.dart`](../../app/lib/constants/ble_constants.dart) (never hardcoded in UI or logic files). If this doc, the header and the Dart constants disagree, the header wins; fix the others in the same commit.
+
+| Version | Tag | Change |
+|---|---|---|
+| Fob packet `0x01` | `protocol/v1` | Initial unauthenticated fob broadcast + 1-byte GATT command |
+
+See [docs/compatibility.md](../compatibility.md) for which firmware/app versions speak which protocol.
 
 ---
 
@@ -34,8 +40,8 @@ The app connects to the receiver as a BLE Central. The receiver advertises one s
 
 | Command | Byte | Receiver Action |
 |---|---|---|
-| Unlock | `0x01` | Green LED HIGH for 3 seconds |
-| Lock | `0x02` | Red LED HIGH for 3 seconds |
+| Unlock | `0x01` | Both door motors run in the unlock direction (100 ms soft-start ramp + 1.5 s hold) |
+| Lock | `0x02` | Both door motors run in the lock direction (same timing) |
 
 ### Write Flow
 
@@ -52,7 +58,7 @@ App                          Receiver
 
 ## Fob Broadcast Protocol (No Auth)
 
-The hardware fob (MDBT42T / nRF52805, `fob_firmware/`) does **not** connect. On each button press it sends non-connectable advertisements for ~500ms (20–30ms interval), then goes quiet. The receiver passively scans the whole time, in parallel with advertising and serving the app's connection, and feeds matching packets into the same command handler as the app's GATT write. This does not affect the app.
+The hardware fob (MDBT42T / nRF52805, `firmware/fob/`) does **not** connect. On each button press it sends non-connectable advertisements for ~500ms (20–30ms interval), then goes quiet. The receiver passively scans the whole time, in parallel with advertising and serving the app's connection, and feeds matching packets into the same command handler as the app's GATT write. This does not affect the app.
 
 ### Packet
 

@@ -12,7 +12,7 @@ This Flutter app is one component of a larger BLE key fob system. The full syste
                               (iOS — BLE Central)
 ```
 
-The **receiver** (nRF52840) is the hub. It accepts BLE Write commands from the phone and BLE Notify commands from the physical fob. Both the app and the physical fob independently control the same outputs (LEDs in POC, car door relays in production).
+The **receiver** (nRF52840) is the hub. It accepts BLE Write commands from the phone and non-connectable broadcast packets from the physical fob (see the fob broadcast protocol). Both the app and the physical fob independently control the same outputs (DRV8873 door-lock motor drivers).
 
 The app has no knowledge of the physical fob — it communicates only with the receiver.
 
@@ -44,7 +44,7 @@ App                          Receiver
  |<-- Write response (success) --|
 ```
 
-All writes use `writeWithResponse: true`. The app waits for the write response before updating UI state. See [ble-protocol.md](ble-protocol.md) for UUIDs and payload spec.
+All writes use `writeWithResponse: true`. The app waits for the write response before updating UI state. See [ble-protocol.md](../../docs/protocol/ble-protocol.md) for UUIDs and payload spec.
 
 ---
 

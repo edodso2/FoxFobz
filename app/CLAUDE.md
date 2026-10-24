@@ -14,7 +14,7 @@ No backend. No cloud. All local BLE communication.
 ## Key Docs — Read Before Working
 - **Where are we?** → `docs/ROADMAP.md`
 - **Active build spec** → `docs/phase-1-app.md`
-- **BLE UUIDs + payload bytes** → `docs/ble-protocol.md`
+- **BLE UUIDs + payload bytes** → `../docs/protocol/ble-protocol.md`
 - **Full system architecture** → `docs/ARCHITECTURE.md`
 - **Open decisions** → `docs/decisions.md`
 
@@ -29,7 +29,7 @@ flutter build ios
 ## Non-Negotiable Rules
 - UUIDs are NEVER hardcoded in UI or logic files — they live in `lib/constants/ble_constants.dart`
 - Always check `docs/ROADMAP.md` before implementing a feature to confirm it's in scope
-- BLE characteristic properties must match `docs/ble-protocol.md` exactly — the firmware is the source of truth
+- BLE characteristic properties must match `../docs/protocol/ble-protocol.md` exactly — the firmware is the source of truth
 - iOS BLE requires `NSBluetoothAlwaysUsageDescription` in `Info.plist` — do not remove it
 - Use `writeWithResponse: true` for all unlock writes so the app knows delivery was confirmed
 

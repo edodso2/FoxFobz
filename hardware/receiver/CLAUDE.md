@@ -5,7 +5,7 @@ two TI DRV8873 dual-H-bridge motor drivers (U3/U4) driving door lock actuators,
 powered from a car's 12V harness through a Molex connector (J2), fuse (F1), and
 reverse-polarity/surge protection diodes (D1/D2). Some wire pairs on J2 are also
 read back (voltage divider + clamp) to sense the car's existing OEM lock
-commands. 2-layer board, 2oz copper, no enclosure size constraint beyond
+commands. 4-layer board (2oz outer / 1oz inner; In1 GND, In2 VM), no enclosure size constraint beyond
 "compact." Git-tracked; commit after every verified change so bad iterations
 are cheap to revert.
 

@@ -1,3 +1,5 @@
+> **Reference, not a schedule.** This is the original v2 plan. Superseded where the [decision log](../decisions/) says so, notably the fob module ([ADR 0003](../decisions/0003-mdbt42t-fob.md)) and the fob transport ([ADR 0004](../decisions/0004-fob-broadcast-not-connection.md)). Current milestones: [roadmap](../roadmap.md). Live state: [STATUS.md](../../STATUS.md).
+
 # BLE Key Fob — POC Plan
 
 ## Overview

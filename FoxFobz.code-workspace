@@ -1,0 +1,34 @@
+{
+  "folders": [
+    { "name": "FoxFobz (root)", "path": "." },
+    { "name": "firmware", "path": "firmware" },
+    { "name": "hardware", "path": "hardware" },
+    { "name": "app", "path": "app" },
+    { "name": "web", "path": "web" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/build": true,
+      "**/node_modules": true,
+      "**/.dart_tool": true,
+      "**/*-backups": true
+    },
+    "search.exclude": {
+      "**/build": true,
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.astro": true,
+      "**/.wrangler": true,
+      "**/ios/Pods": true,
+      "**/fp-info-cache": true,
+      "docs/datasheets": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "nordic-semiconductor.nrf-connect-extension-pack",
+      "dart-code.flutter",
+      "astro-build.astro-vscode"
+    ]
+  }
+}
