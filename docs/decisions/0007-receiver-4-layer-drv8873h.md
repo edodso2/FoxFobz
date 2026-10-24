@@ -7,6 +7,6 @@
 - Two **DRV8873H** drivers set up by hardware pins (MODE/SR/nITRIP/nOL to GND, nSLEEP on GPIO, IPROPI 470 Ω to the ADC). No SPI bus.
 
 **Consequences.**
-- [hardware/receiver/docs/early-pin-plan.md](../../hardware/receiver/docs/early-pin-plan.md) (SPI bus, P0.13–P0.17) is superseded. The schematic is the pinout source of truth.
+- The early pre-schematic pin plan (SPI bus on P0.13–P0.17) is superseded and was dropped from this repo; it's still in the archived planning repo. The schematic is the pinout source of truth.
 - The 2-layer variant only exists in the old KiCad repo's `main` branch history.
 - *Main driver for going to 4 layers (routing closure vs current/thermal planes) wasn't written down. Add it.*
