@@ -1,0 +1,20 @@
+---
+import Base from './Base.astro';
+import { site } from '../site.config';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow?: string;
+}
+const { title, description, eyebrow = 'Policies' } = Astro.props;
+---
+
+<Base title={`${title} — Fox Fobz`} description={description}>
+  <article class="prose">
+    <div class="eyebrow">{eyebrow}</div>
+    <h1>{title}</h1>
+    <p class="meta">Last updated {site.lastUpdated}</p>
+    <slot />
+  </article>
+</Base>

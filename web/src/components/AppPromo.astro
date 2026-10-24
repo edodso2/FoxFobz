@@ -1,0 +1,270 @@
+---
+import { product } from '../site.config';
+---
+
+<section id="app" class="container app">
+  <div class="phone-wrap">
+    <div class="phone" role="group" aria-label="Fox Fobz app preview">
+      <div class="screen">
+        <div class="row">
+          <span class="mini-mark">FOX FOBZ</span>
+          <span class="dim small">Connected</span>
+        </div>
+        <div class="car">
+          <span class="dim">My Mustang</span>
+          <span class="state">Locked</span>
+        </div>
+        <div class="group">
+          <span class="cap">Lock health</span>
+          <div class="card">
+            <div class="row"><span>Driver door</span><span class="warn">Service soon</span></div>
+            <div class="bar"><div class="fill fill-warn"></div></div>
+            <span class="dim small">Actuator is drawing more current than its normal baseline.</span>
+          </div>
+          <div class="card">
+            <div class="row"><span>Passenger door</span><span class="dim">Normal</span></div>
+            <div class="bar"><div class="fill fill-ok"></div></div>
+          </div>
+        </div>
+        <div class="group">
+          <span class="cap" id="ff-mode-label">Unlock mode</span>
+          <div class="seg" role="group" aria-labelledby="ff-mode-label">
+            <button type="button" data-mode="driver" aria-pressed="true">Driver first</button>
+            <button type="button" data-mode="all" aria-pressed="false">All doors</button>
+          </div>
+          <span class="dim small" id="ff-mode-text" aria-live="polite"
+            >One press unlocks the driver door. Press again to unlock both.</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="copy">
+    <div class="eyebrow">The App</div>
+    <h2 class="h-section">Your locks, finally talking back.</h2>
+    <p class="lede">
+      Thirty-plus-year-old door lock actuators wear out slowly. The Fox Fobz receiver measures every lock cycle, so the
+      app can tell you when one starts working harder than it should.
+    </p>
+    <div class="list">
+      <div>
+        <h3>Actuator health</h3>
+        <p>Spot a failing actuator before it leaves a door stuck.</p>
+      </div>
+      <div>
+        <h3>Current draw alerts</h3>
+        <p>Get notified when a lock pulls more amps than usual and needs servicing.</p>
+      </div>
+      <div>
+        <h3>Unlock your way</h3>
+        <p>Both doors on one press, or driver first and both on a second press. Try it on the screen.</p>
+      </div>
+    </div>
+    <div class="badges">
+      <a href={product.appStoreUrl || '/#updates'}>{product.appStoreUrl ? 'Download on the App Store' : '[App Store badge]'}</a>
+      <a href={product.googlePlayUrl || '/#updates'}>{product.googlePlayUrl ? 'Get it on Google Play' : '[Google Play badge]'}</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const text = document.getElementById('ff-mode-text')!;
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-mode]');
+  buttons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      text.textContent =
+        btn.dataset.mode === 'driver'
+          ? 'One press unlocks the driver door. Press again to unlock both.'
+          : 'One press unlocks both doors.';
+    }),
+  );
+</script>
+
+<style>
+  .app {
+    padding-top: 112px;
+    padding-bottom: 112px;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-items: center;
+    gap: 72px;
+  }
+  .phone-wrap {
+    flex: 1 1 340px;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .phone {
+    width: 320px;
+    max-width: 100%;
+    border-radius: 44px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    padding: 14px;
+  }
+  .screen {
+    border-radius: 32px;
+    background: var(--bg);
+    padding: 28px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 600px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  .mini-mark {
+    font-weight: 200;
+    letter-spacing: 0.28em;
+    font-size: 15px;
+  }
+  .dim {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .small {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .car {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 0;
+  }
+  .state {
+    font-size: 34px;
+    font-weight: 200;
+  }
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cap {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .card {
+    background: var(--surface-raised);
+    border: 1px solid var(--line-mid);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .warn {
+    color: var(--accent);
+  }
+  .bar {
+    height: 6px;
+    border-radius: 6px;
+    background: var(--line-mid);
+  }
+  .fill {
+    height: 6px;
+    border-radius: 6px;
+  }
+  .fill-warn {
+    width: 82%;
+    background: var(--accent);
+  }
+  .fill-ok {
+    width: 38%;
+    background: var(--subtle);
+  }
+  .seg {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line-mid);
+    border-radius: 999px;
+    padding: 4px;
+  }
+  .seg button {
+    font-size: 13px;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 0;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-soft);
+    font-weight: 400;
+  }
+  .seg button[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  .copy {
+    flex: 1 1 480px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .lede {
+    max-width: 520px;
+  }
+  .list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+  }
+  .list div {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .list h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .list p {
+    margin: 0;
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .badges a {
+    text-decoration: none;
+    border: 1px solid var(--line-strong);
+    padding: 12px 22px;
+    border-radius: 12px;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+  }
+  @media (max-width: 640px) {
+    .app {
+      padding-top: 72px;
+      padding-bottom: 72px;
+      gap: 48px;
+    }
+    .phone-wrap,
+    .copy {
+      flex-basis: 100%;
+    }
+  }
+</style>

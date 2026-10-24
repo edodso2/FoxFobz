@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+---
+
+<Base title="Checkout canceled — Fox Fobz" noindex>
+  <section class="container cancel">
+    <div class="eyebrow">Checkout canceled</div>
+    <h1>No worries — you weren’t charged.</h1>
+    <p class="lede">
+      Your kit is still here when you’re ready. If something went wrong at checkout, email
+      <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> and we’ll help.
+    </p>
+    <div class="next">
+      <a class="btn btn-primary" href="/#kit">Back to the kit</a>
+      <a class="btn btn-ghost" href="/#install">Watch the install first</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cancel {
+    padding-top: 112px;
+    padding-bottom: 128px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 860px;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 200;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+  }
+  .lede {
+    max-width: 600px;
+  }
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 8px;
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import Policy from '../layouts/Policy.astro';
+import { formatAddressLines, site } from '../site.config';
+---
+
+<Policy title="Privacy policy" description="What information Fox Fobz collects, how it's used, and your choices.">
+  <p>
+    This policy explains what {site.legalName} (“Fox Fobz”, “we”) collects when you visit foxfobz.com or buy from us, and
+    what we do with it. We don’t sell your personal information.
+  </p>
+
+  <h2>What we collect</h2>
+  <h3>When you buy a kit</h3>
+  <p>
+    Your name, email address, phone number, shipping address, the vehicle year and body style you select, and what you
+    ordered. Payment is handled by Stripe on its own checkout page — we never see or store your full card number.
+  </p>
+  <h3>When you join our email list</h3>
+  <p>Your email address and when you signed up.</p>
+  <h3>When you browse the site</h3>
+  <p>
+    We use Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites. Our
+    spam check (Cloudflare Turnstile) and the install video (YouTube, loaded only when you press play) may process
+    technical data such as your IP address and browser details.
+  </p>
+
+  <h2>How we use it</h2>
+  <ul>
+    <li>To process payment, ship your order, and send your receipt and tracking</li>
+    <li>To answer support, warranty and return requests</li>
+    <li>
+      To send product updates and news, only if you joined our list or opted in at checkout. Every marketing email will
+      include a way to unsubscribe, and you can always ask us to remove you.
+    </li>
+    <li>To prevent fraud and spam, and to meet legal and tax obligations</li>
+  </ul>
+
+  <h2>Who we share it with</h2>
+  <p>Only the service providers we need to run the store:</p>
+  <ul>
+    <li><strong>Stripe</strong> — payments, receipts and sales tax</li>
+    <li><strong>Pirate Ship</strong> and the shipping carrier (USPS or UPS) — shipping labels and tracking emails</li>
+    <li><strong>Cloudflare</strong> — website hosting, data storage, analytics and spam protection</li>
+  </ul>
+  <p>We may also disclose information if required by law.</p>
+
+  <h2>How long we keep it</h2>
+  <p>
+    Order records are kept as long as needed for warranty support and tax and accounting requirements. Email list entries
+    are kept until you unsubscribe or ask us to delete them.
+  </p>
+
+  <h2>Your choices</h2>
+  <p>
+    You can ask to see, correct or delete your personal information, or to be removed from our email list, by emailing
+    <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>. Depending on where you live, you may have additional
+    rights under state privacy laws; we’ll honor those requests as the law requires.
+  </p>
+
+  <h2>Children</h2>
+  <p>Our site isn’t directed to children under 13, and we don’t knowingly collect their information.</p>
+
+  <h2>Changes</h2>
+  <p>If we change this policy, we’ll update the date at the top of this page.</p>
+
+  <h2>Contact</h2>
+  <address>
+    {formatAddressLines().map((line) => <>{line}<br /></>)}
+    <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>
+  </address>
+</Policy>

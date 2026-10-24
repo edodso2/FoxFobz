@@ -1,0 +1,90 @@
+---
+import { formatAddressLines, site } from '../site.config';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div class="brand">
+      <span class="wordmark">FOX FOBZ</span>
+      <address>
+        {formatAddressLines().map((line) => <span>{line}</span>)}
+      </address>
+      <p>
+        Fox Fobz is an independent company and is not affiliated with or endorsed by Ford Motor Company. Mustang is a
+        trademark of Ford Motor Company.
+      </p>
+      <p class="copy">© {year} {site.name}</p>
+    </div>
+    <div class="cols">
+      <nav aria-label="Shop">
+        <a href="/#kit">Shop</a>
+        <a href="/#install">Install guide</a>
+        <a href="/#app">App</a>
+        <a href={`mailto:${site.supportEmail}`}>Support: {site.supportEmail}</a>
+      </nav>
+      <nav aria-label="Policies">
+        <a href="/shipping">Shipping</a>
+        <a href="/warranty-returns">Warranty &amp; returns</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    padding-top: 48px;
+    padding-bottom: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 32px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 520px;
+    line-height: 1.6;
+  }
+  .brand p {
+    margin: 0;
+  }
+  .wordmark {
+    font-weight: 200;
+    letter-spacing: 0.32em;
+    font-size: 20px;
+    color: var(--text);
+  }
+  address {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+  }
+  .copy {
+    color: var(--subtle);
+  }
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 56px;
+  }
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  nav a {
+    text-decoration: none;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

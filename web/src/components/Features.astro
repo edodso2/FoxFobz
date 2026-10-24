@@ -1,0 +1,65 @@
+<section aria-label="What makes it different" class="features">
+  <div class="container inner">
+    <div class="point">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"
+        ><rect x="4" y="7" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"
+        ></rect><path d="M8 7V4M14 7V4M20 7V4M8 24v-3M14 24v-3M20 24v-3" stroke="currentColor" stroke-width="1.4"
+        ></path></svg
+      >
+      <h2>A receiver built for this car</h2>
+      <p>A small custom board designed around the Fox body’s factory lock system, using current-generation components.</p>
+    </div>
+    <div class="point">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"
+        ><rect x="8" y="2" width="12" height="24" rx="6" fill="none" stroke="currentColor" stroke-width="1.4"
+        ></rect><circle cx="14" cy="10" r="2.2" fill="none" stroke="currentColor" stroke-width="1.4"
+        ></circle><circle cx="14" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="1.4"></circle></svg
+      >
+      <h2>Two New Edge–style fobs</h2>
+      <p>The fob shape Mustang owners already know, in-house designed and paired to your receiver out of the box.</p>
+    </div>
+    <div class="point">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"
+        ><path d="M2 15h6l3-8 5 15 3-7h7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"
+        ></path></svg
+      >
+      <h2>An app that knows your locks</h2>
+      <p>See when a door lock actuator is drawing more current than usual — and service it before it quits.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .features {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .inner {
+    padding-top: 56px;
+    padding-bottom: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+  }
+  .point {
+    flex: 1 1 280px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  svg {
+    color: var(--accent);
+  }
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 300;
+  }
+  p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+</style>

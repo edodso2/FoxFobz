@@ -1,0 +1,20 @@
+# Copy to .dev.vars for local development (`astro dev` and `wrangler dev` read it).
+# .dev.vars is gitignored. Use Stripe TEST mode keys locally.
+
+STRIPE_SECRET_KEY=sk_test_...
+# Printed by `npm run stripe:listen` (starts with whsec_)
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_KIT=price_...
+# Comma-separated; the first is preselected in Checkout
+STRIPE_SHIPPING_RATE_IDS=shr_...
+
+# Cloudflare's always-pass test keys. Replace with real keys to test real challenges.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+
+# Optional locally; the /admin JWT check is skipped in `astro dev`.
+# CF_ACCESS_TEAM_DOMAIN=yourteam.cloudflareaccess.com
+# CF_ACCESS_AUD=...
+
+# Optional: Cloudflare Web Analytics beacon token (only needed if not using automatic setup)
+# PUBLIC_CF_BEACON_TOKEN=

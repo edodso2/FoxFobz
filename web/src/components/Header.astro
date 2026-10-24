@@ -1,0 +1,64 @@
+---
+// Section links are absolute (/#kit) so they work from every page.
+---
+
+<header class="site-header">
+  <nav aria-label="Main" class="container nav">
+    <a href="/" class="wordmark" aria-label="Fox Fobz home">FOX FOBZ</a>
+    <div class="links">
+      <a href="/#kit">The Kit</a>
+      <a href="/#install">Install</a>
+      <a href="/#app">App</a>
+      <a href="/#updates">Updates</a>
+      <a href="/#kit" class="btn btn-primary shop">Shop the kit</a>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    padding-top: 22px;
+    padding-bottom: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .wordmark {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 200;
+    font-size: 26px;
+    letter-spacing: 0.32em;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 32px;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+  }
+  .links a {
+    text-decoration: none;
+  }
+  .links .shop {
+    min-height: 44px;
+    padding: 12px 22px;
+    font-size: 15px;
+  }
+  @media (max-width: 720px) {
+    .links {
+      gap: 8px 20px;
+    }
+    .links a:not(.shop) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

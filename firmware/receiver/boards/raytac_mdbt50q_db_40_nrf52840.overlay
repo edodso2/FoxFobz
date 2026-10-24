@@ -1,0 +1,32 @@
+/* Motor RUN (EN/IN1) pins driven via PWM1 (2 channels, one per side) so we
+ * can soft-start ramp duty cycle instead of switching straight to full HIGH.
+ * PWM0 is already claimed by the onboard RGB LED (P0.13-15); PWM1 is
+ * otherwise unused.
+ *
+ * Channel 0 -> P0.19 (driver side EN/IN1), channel 1 -> P0.21 (passenger
+ * side EN/IN1). These match the prod board's pin assignment even though
+ * we're bringing this up on the test board for now.
+ */
+&pinctrl {
+	pwm1_default: pwm1_default {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 19)>,
+				<NRF_PSEL(PWM_OUT1, 0, 21)>;
+		};
+	};
+
+	pwm1_sleep: pwm1_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 19)>,
+				<NRF_PSEL(PWM_OUT1, 0, 21)>;
+			low-power-enable;
+		};
+	};
+};
+
+&pwm1 {
+	status = "okay";
+	pinctrl-0 = <&pwm1_default>;
+	pinctrl-1 = <&pwm1_sleep>;
+	pinctrl-names = "default", "sleep";
+};

@@ -1,0 +1,55 @@
+---
+import Policy from '../layouts/Policy.astro';
+import { formatAddressLines, product, site } from '../site.config';
+---
+
+<Policy
+  title="Warranty & returns"
+  description="The Fox Fobz warranty, how to return a kit, and where to send it."
+>
+  <h2>Warranty</h2>
+  <p>
+    Fox Fobz kits carry a {product.warrantyLength} limited warranty against defects in materials and workmanship, starting
+    on the date your order is delivered. If a part fails under normal use, we’ll repair or replace it.
+  </p>
+  <p>The warranty doesn’t cover:</p>
+  <ul>
+    <li>Damage from incorrect installation, wiring changes, or modifications to the kit</li>
+    <li>Water, impact, or electrical damage, including from other faults in the vehicle</li>
+    <li>Normal wear, including fob batteries and cosmetic wear</li>
+    <li>The vehicle’s own door lock actuators, wiring, or other factory parts</li>
+  </ul>
+
+  <h2>Returns</h2>
+  <p>
+    You can return an unused kit in its original packaging within {product.returnWindowDays} days of delivery for a refund
+    of the product price. Kits that have been installed can be returned only under the warranty above.
+  </p>
+
+  <h2>How to return</h2>
+  <ol>
+    <li>
+      Email <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> with your name, order email, and the reason for
+      the return.
+    </li>
+    <li>Pack the kit securely, with a note that includes your name and order email.</li>
+    <li>
+      Ship it to our PO box <strong>by USPS only</strong>. UPS, FedEx and other carriers can’t deliver to a PO box, and
+      those packages will be returned to you.
+    </li>
+  </ol>
+  <address>
+    {formatAddressLines().map((line) => <>{line}<br /></>)}
+  </address>
+  <p>
+    We recommend a USPS service with tracking. Return shipping is your cost unless the kit arrived defective or we sent
+    the wrong item, in which case we’ll reimburse your USPS postage.
+  </p>
+
+  <h2>Refunds</h2>
+  <p>
+    Once the kit arrives and we’ve checked it, we refund your original payment method, usually within 5 business days.
+    Your bank may take a few more days to show it. Original shipping charges aren’t refundable unless the return is
+    because of our error.
+  </p>
+</Policy>

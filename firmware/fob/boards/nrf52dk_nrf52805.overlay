@@ -1,0 +1,45 @@
+/* MDBT42T-DB (nRF52805) fob. We build against the nrf52dk/nrf52805 board
+ * target since Zephyr has no MDBT42T board; this overlay re-maps it to the
+ * module's actual pins (see docs/MDBT42T-DB.pdf, section 2.5).
+ *
+ * Usable button pins on the module: P0.04, P0.05, P0.12, P0.14, P0.16,
+ * P0.18, P0.20. Avoid P0.21 (nRESET) and P0.00/P0.01 (32.768kHz crystal).
+ *
+ * Buttons are wired pin -> button -> GND and use the internal pull-up.
+ */
+
+/ {
+	buttons {
+		/* Unlock */
+		button_0 {
+			gpios = <&gpio0 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		/* Lock */
+		button_1 {
+			gpios = <&gpio0 5 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		/* Buttons 3/4 reserved for future commands; also add them to
+		 * buttons[] in src/main.c when wiring them up. */
+		button_2 {
+			gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		button_3 {
+			gpios = <&gpio0 14 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+	};
+};
+
+/* The DK's UART pins (P0.05-P0.08) clash with our buttons and mostly don't
+ * exist on the module. Console goes over RTT via the nRF DK's J-Link instead
+ * (see prj.conf). SPI/I2C pins don't exist on the module either. */
+&uart0 {
+	status = "disabled";
+};
+
+&spi0 {
+	status = "disabled";
+};
+
+&i2c0 {
+	status = "disabled";
+};

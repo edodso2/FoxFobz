@@ -1,0 +1,59 @@
+---
+import Policy from '../layouts/Policy.astro';
+import { site } from '../site.config';
+---
+
+<Policy title="Terms of sale" description="The terms that apply when you use foxfobz.com and buy a Fox Fobz kit.">
+  <p>
+    These terms apply when you use foxfobz.com or buy from {site.legalName} (“Fox Fobz”, “we”). By placing an order you
+    agree to them.
+  </p>
+
+  <h2>Orders and pricing</h2>
+  <p>
+    Prices are in US dollars. Shipping and sales tax are calculated at checkout. Your order is accepted when payment
+    succeeds and you receive a receipt. We may cancel and fully refund an order if a product is unavailable, if there’s
+    an obvious pricing error, or if we suspect fraud.
+  </p>
+
+  <h2>Fitment and installation</h2>
+  <p>
+    Fox Fobz kits are designed for 1985–1993 Ford Mustang Coupe, Hatchback and Convertible models with factory power
+    door locks. Please choose the correct year and body style when ordering. Installation involves working on your
+    vehicle’s electrical system. If you aren’t comfortable doing that, have a qualified installer do it. Follow the
+    install instructions and video, and disconnect the battery before you start.
+  </p>
+
+  <h2>The app</h2>
+  <p>
+    Lock health and current-draw information in the Fox Fobz app is an estimate to help you spot wear. It isn’t a
+    guarantee that a lock or actuator will or won’t fail. Don’t rely on the kit or app as your only means of securing your
+    vehicle.
+  </p>
+
+  <h2>Shipping, warranty and returns</h2>
+  <p>
+    See our <a href="/shipping">Shipping</a> and <a href="/warranty-returns">Warranty &amp; returns</a> pages, which are
+    part of these terms.
+  </p>
+
+  <h2>Limitation of liability</h2>
+  <p>
+    To the extent permitted by law, our total liability for any claim related to a product is limited to the amount you
+    paid for it, and we aren’t liable for indirect, incidental or consequential damages. Some states don’t allow these
+    limits, so they may not apply to you. Nothing in these terms limits rights you have under consumer protection laws
+    that can’t be waived.
+  </p>
+
+  <h2>Trademarks</h2>
+  <p>
+    Fox Fobz is an independent company and is not affiliated with or endorsed by Ford Motor Company. Ford and Mustang are
+    trademarks of Ford Motor Company, used here only to describe the vehicles our products fit.
+  </p>
+
+  <h2>Governing law</h2>
+  <p>These terms are governed by the laws of the State of {site.governingState}.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about these terms: <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>.</p>
+</Policy>

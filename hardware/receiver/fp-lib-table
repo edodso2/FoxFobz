@@ -1,0 +1,10 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "MDBT50Q-1MV2") (type "KiCad") (uri "${KIPRJMOD}/MDBT50Q-1MV2.pretty") (options "") (descr ""))
+	(lib (name "3568") (type "KiCad") (uri "${KIPRJMOD}/3568.pretty") (options "") (descr ""))
+	(lib (name "348300801") (type "KiCad") (uri "${KIPRJMOD}/348300801.pretty") (options "") (descr ""))
+	(lib (name "DRV8873HPWPRQ1") (type "KiCad") (uri "${KIPRJMOD}/DRV8873HPWPRQ1.pretty") (options "") (descr ""))
+	(lib (name "0367831201") (type "KiCad") (uri "${KIPRJMOD}/0367831201.pretty") (options "") (descr ""))
+	(lib (name "SL1545") (type "KiCad") (uri "${KIPRJMOD}/SL1545.pretty") (options "") (descr ""))
+	(lib (name "39301120") (type "KiCad") (uri "${KIPRJMOD}/39301120.pretty") (options "") (descr "Molex Mini-Fit Jr. 2x6 R/A header"))
+)

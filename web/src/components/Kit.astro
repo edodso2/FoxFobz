@@ -1,0 +1,372 @@
+---
+import Photo from './Photo.astro';
+import { product } from '../site.config';
+
+const thumbs = [
+  { name: 'kit-receiver', label: '[Receiver board]', alt: 'Fox Fobz receiver board' },
+  { name: 'kit-fobs', label: '[Fobs in hand]', alt: 'Two Fox Fobz key fobs in hand' },
+  { name: 'kit-app', label: '[App screen]', alt: 'Fox Fobz app lock health screen' },
+];
+---
+
+<section id="kit" class="container kit">
+  <div class="gallery">
+    <div class="main-photo">
+      <Photo
+        name="kit"
+        alt="Everything in the Fox Fobz kit, laid flat"
+        placeholder="[Product photo — full kit, flat lay]"
+        widths={[480, 720, 1040, 1300]}
+        sizes="(max-width: 1100px) calc(100vw - 40px), 580px"
+      />
+    </div>
+    <div class="thumbs">
+      {
+        thumbs.map((t) => (
+          <div class="thumb">
+            <Photo name={t.name} alt={t.alt} placeholder={t.label} widths={[200, 400]} sizes="(max-width: 1100px) 30vw, 190px" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <form class="buy" method="post" action="/api/checkout" id="buy-form">
+    <div class="heading">
+      <div class="eyebrow">The Kit</div>
+      <h2 class="h-section">{product.name}</h2>
+      <div class="sub">For 1985–1993 Ford Mustang</div>
+      <div class="price">{product.priceDisplay}</div>
+    </div>
+
+    <div class="field">
+      <label for="ff-year" class="label">Year</label>
+      <select id="ff-year" name="year" required>
+        {product.years.map((y) => <option value={y} selected={y === product.defaultYear}>{y}</option>)}
+      </select>
+    </div>
+
+    <fieldset class="field">
+      <legend class="label">Body style</legend>
+      <div class="pills">
+        {
+          product.bodyStyles.map((b) => (
+            <label class="pill">
+              <input type="radio" name="body_style" value={b} checked={b === product.defaultBodyStyle} required />
+              <span>{b}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div class="fit" aria-live="polite">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"
+        ><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.3"></circle><path
+          d="M5.5 9.2l2.3 2.3 4.7-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.4"></path></svg
+      >
+      <span id="ff-fit">Fits your {product.defaultYear} Mustang {product.defaultBodyStyle}.</span>
+    </div>
+
+    <div class="box">
+      <h3 class="label">In the box</h3>
+      <ul>
+        {product.inTheBox.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+
+    <div class="actions">
+      <div class="stepper">
+        <button type="button" data-step="-1" aria-label="Decrease quantity">−</button>
+        <label for="ff-qty" class="visually-hidden">Quantity</label>
+        <input id="ff-qty" name="quantity" type="number" inputmode="numeric" min="1" max={product.maxQuantity} value="1" />
+        <button type="button" data-step="1" aria-label="Increase quantity">+</button>
+      </div>
+      <button type="submit" class="btn btn-primary buy-btn" id="ff-buy">Buy now</button>
+    </div>
+    <p class="error" id="ff-buy-error" role="alert" hidden></p>
+    <div class="note">
+      Ships {product.shippingWindow} · {product.warrantyLength} warranty · Spare fobs sold separately [CONFIRM]<br />
+      Shipping and sales tax are calculated at checkout. Secure payment by Stripe.
+    </div>
+  </form>
+</section>
+
+<script>
+  const form = document.getElementById('buy-form') as HTMLFormElement;
+  const fit = document.getElementById('ff-fit')!;
+  const qty = document.getElementById('ff-qty') as HTMLInputElement;
+  const buy = document.getElementById('ff-buy') as HTMLButtonElement;
+  const error = document.getElementById('ff-buy-error')!;
+  const max = Number(qty.max);
+
+  const updateFit = () => {
+    const data = new FormData(form);
+    const body = data.get('body_style');
+    fit.textContent = body ? `Fits your ${data.get('year')} Mustang ${body}.` : 'Choose your body style.';
+  };
+  form.addEventListener('change', updateFit);
+
+  const clamp = (n: number) => Math.min(max, Math.max(1, Math.round(n) || 1));
+  form.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      qty.value = String(clamp(Number(qty.value) + Number(btn.dataset.step)));
+    }),
+  );
+  qty.addEventListener('change', () => (qty.value = String(clamp(Number(qty.value)))));
+
+  form.addEventListener('submit', () => {
+    buy.disabled = true;
+    buy.textContent = 'Opening secure checkout…';
+  });
+  // Re-enable when returning from Stripe via the back button (bfcache).
+  window.addEventListener('pageshow', () => {
+    buy.disabled = false;
+    buy.textContent = 'Buy now';
+  });
+
+  const params = new URLSearchParams(location.search);
+  const code = params.get('checkout_error');
+  if (code) {
+    error.textContent =
+      code === 'invalid'
+        ? 'Please choose your year, body style and quantity, then try again.'
+        : 'Checkout is temporarily unavailable. Please try again in a moment, or email support@foxfobz.com.';
+    error.hidden = false;
+    params.delete('checkout_error');
+    history.replaceState(null, '', `${location.pathname}${params.size ? `?${params}` : ''}${location.hash}`);
+  }
+</script>
+
+<style>
+  .kit {
+    padding-top: 112px;
+    padding-bottom: 96px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 64px;
+  }
+  .gallery {
+    flex: 1 1 520px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .main-photo,
+  .thumb {
+    aspect-ratio: 1 / 1;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .main-photo {
+    border-radius: 20px;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .main-photo :global(.photo-placeholder) {
+    padding: 24px;
+  }
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .thumb {
+    border-radius: 14px;
+    font-size: 12px;
+  }
+  .thumb :global(.photo-placeholder) {
+    padding: 8px;
+  }
+
+  .buy {
+    flex: 1 1 440px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .sub {
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .price {
+    font-size: 32px;
+    font-weight: 300;
+    padding-top: 6px;
+  }
+  .field {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+  legend.label {
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  select {
+    font-size: 16px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    padding: 12px 14px;
+    min-height: 48px;
+  }
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pill input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .pill span {
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+    font-weight: 400;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .pill span:hover {
+    border-color: var(--text);
+  }
+  .pill input:checked + span {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+    font-weight: 600;
+  }
+  .pill input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .fit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--text-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .fit svg {
+    color: var(--accent);
+    flex: none;
+  }
+  .box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+  }
+  .box h3 {
+    margin: 0;
+    font-weight: 400;
+  }
+  .box ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 300;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    padding-top: 4px;
+  }
+  .stepper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+  }
+  .stepper button {
+    background: transparent;
+    border: 0;
+    color: var(--text);
+    width: 48px;
+    height: 52px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 999px;
+  }
+  .stepper input {
+    width: 32px;
+    text-align: center;
+    font-size: 17px;
+    background: transparent;
+    color: var(--text);
+    border: 0;
+    padding: 0;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .stepper input::-webkit-outer-spin-button,
+  .stepper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .buy-btn {
+    flex: 1 1 220px;
+    font-size: 17px;
+    padding: 0 28px;
+  }
+  .error {
+    margin: -12px 0 0;
+    color: var(--danger);
+    font-size: 15px;
+  }
+  .note {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  @media (max-width: 640px) {
+    .kit {
+      padding-top: 72px;
+      padding-bottom: 72px;
+      gap: 40px;
+    }
+    .gallery,
+    .buy {
+      flex-basis: 100%;
+    }
+  }
+</style>

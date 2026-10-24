@@ -1,0 +1,463 @@
+---
+import { Font } from 'astro:assets';
+import { db } from '../../lib/db';
+import { formatMoney } from '../../lib/stripe';
+import { dashboardUrl, searchOrders, type FulfillmentStatus, type Order } from '../../lib/orders';
+import '../../styles/global.css';
+
+export const prerender = false;
+
+const FILTERS = ['all', 'unfulfilled', 'shipped'] as const;
+type Filter = (typeof FILTERS)[number];
+const LIMIT = 1000;
+
+const requested = Astro.url.searchParams.get('status') as Filter | null;
+const filter: Filter = requested && FILTERS.includes(requested) ? requested : 'all';
+
+let allOrders: Order[] = [];
+let truncated = false;
+let loadError = false;
+const [ordersResult, subsResult] = await Promise.allSettled([
+  searchOrders({ limit: LIMIT }),
+  db().prepare(`SELECT COUNT(*) AS n FROM subscribers WHERE unsubscribed_at IS NULL`).first<{ n: number }>(),
+]);
+if (ordersResult.status === 'fulfilled') {
+  ({ orders: allOrders, truncated } = ordersResult.value);
+} else {
+  loadError = true;
+  console.error('Failed to load orders from Stripe', ordersResult.reason);
+}
+if (subsResult.status === 'rejected') throw subsResult.reason;
+const subscriberCount = subsResult.value?.n ?? 0;
+
+const counts: Record<FulfillmentStatus, number> = { unfulfilled: 0, shipped: 0 };
+for (const o of allOrders) counts[o.fulfillmentStatus]++;
+const orders = filter === 'all' ? allOrders : allOrders.filter((o) => o.fulfillmentStatus === filter);
+
+const notice = Astro.url.searchParams.get('notice');
+const noticeCount = Number(Astro.url.searchParams.get('count') ?? 0);
+const failedCount = Number(Astro.url.searchParams.get('failed') ?? 0);
+const noticeText =
+  notice === 'shipped'
+    ? `Marked ${noticeCount} order${noticeCount === 1 ? '' : 's'} as shipped.` +
+      (failedCount ? ` ${failedCount} failed; try again.` : '') +
+      ' The list can take a minute to reflect the change.'
+    : notice === 'none-selected'
+      ? 'Select at least one order first.'
+      : null;
+
+const fmtDate = (d: string | number) =>
+  new Date(typeof d === 'number' ? d * 1000 : d).toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Orders — Fox Fobz admin</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Font cssVariable="--font-karla" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap bar">
+        <a href="/admin" class="wordmark">FOX FOBZ <span>admin</span></a>
+        {Astro.locals.adminEmail && <span class="who">{Astro.locals.adminEmail}</span>}
+      </div>
+    </header>
+
+    <main class="wrap" id="main">
+      <div class="head">
+        <h1>Orders</h1>
+        <div class="exports">
+          <a class="btn btn-primary" href="/api/admin/export-orders" download>
+            Export unshipped orders ({counts.unfulfilled})
+          </a>
+          <a class="btn btn-ghost" href="/api/admin/export-subscribers" download>
+            Export subscribers ({subscriberCount})
+          </a>
+        </div>
+      </div>
+
+      {
+        noticeText && (
+          <p class="notice" role="status">
+            {noticeText}
+          </p>
+        )
+      }
+
+      <div class="toolbar">
+        <nav class="filters" aria-label="Filter orders by status">
+          {
+            FILTERS.map((f) => (
+              <a href={f === 'all' ? '/admin' : `/admin?status=${f}`} aria-current={f === filter ? 'page' : undefined}>
+                {f === 'unfulfilled' ? 'Unshipped' : f[0].toUpperCase() + f.slice(1)}
+                <span>{f === 'all' ? allOrders.length : counts[f]}</span>
+              </a>
+            ))
+          }
+        </nav>
+        <div class="refresh">
+          <span class="hint">Orders from the last minute may not appear yet.</span>
+          <a class="btn btn-ghost small" href={filter === 'all' ? '/admin' : `/admin?status=${filter}`}>
+            Refresh
+          </a>
+        </div>
+      </div>
+
+      {
+        loadError ? (
+          <p class="notice" role="alert">
+            Couldn’t load orders from Stripe. Refresh to try again.
+          </p>
+        ) : orders.length === 0 ? (
+          <p class="empty">No orders here yet.</p>
+        ) : (
+          <form method="post" action="/api/admin/ship" id="ship-form">
+            <div class="bulk">
+              <button type="submit" class="btn btn-primary small">
+                Mark selected as shipped
+              </button>
+              <span class="hint">Tracking numbers are optional. Pirate Ship emails tracking to customers.</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <caption class="visually-hidden">
+                  Orders, newest first
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <input type="checkbox" id="select-all" aria-label="Select all unshipped orders" />
+                    </th>
+                    <th scope="col">Order</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Fitment</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Ship to</th>
+                    <th scope="col">Tracking</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map((o) => {
+                    const a = o.address;
+                    const canShip = o.fulfillmentStatus === 'unfulfilled';
+                    return (
+                      <tr>
+                        <td>
+                          {canShip && (
+                            <input type="checkbox" name="id" value={o.id} aria-label={`Select order ${o.id}`} />
+                          )}
+                        </td>
+                        <td>
+                          <a class="mono" href={dashboardUrl(o)} target="_blank" rel="noopener noreferrer">
+                            {o.id}
+                          </a>
+                          <span class="sub">{fmtDate(o.created)}</span>
+                        </td>
+                        <td>
+                          <span class={`status status-${o.fulfillmentStatus}`}>
+                            {canShip ? 'Unshipped' : o.fulfillmentStatus}
+                          </span>
+                          {o.shippedAt && <span class="sub">{fmtDate(o.shippedAt)}</span>}
+                        </td>
+                        <td>
+                          {o.name ?? '—'}
+                          {o.email && (
+                            <a class="sub" href={`mailto:${o.email}`}>
+                              {o.email}
+                            </a>
+                          )}
+                          {o.phone && <span class="sub">{o.phone}</span>}
+                        </td>
+                        <td>{o.year ? `${o.year} ${o.bodyStyle ?? ''}` : '—'}</td>
+                        <td>{o.quantity}</td>
+                        <td>{formatMoney(o.amount, o.currency)}</td>
+                        <td class="addr">
+                          {a ? (
+                            <>
+                              {a.line1}
+                              {a.line2 && <>, {a.line2}</>}
+                              <span class="sub">
+                                {a.city}, {a.state} {a.postal_code} {a.country !== 'US' && a.country}
+                              </span>
+                            </>
+                          ) : (
+                            '—'
+                          )}
+                        </td>
+                        <td>
+                          {canShip ? (
+                            <div class="ship">
+                              <label class="visually-hidden" for={`tracking_${o.id}`}>
+                                Tracking number for {o.id}
+                              </label>
+                              <input
+                                type="text"
+                                id={`tracking_${o.id}`}
+                                name={`tracking_${o.id}`}
+                                placeholder="Optional"
+                                maxlength="64"
+                                autocomplete="off"
+                                spellcheck="false"
+                              />
+                              <button type="submit" name="single" value={o.id} class="btn btn-ghost small">
+                                Mark shipped
+                              </button>
+                            </div>
+                          ) : (
+                            <span class="mono">{o.trackingNumber ?? '—'}</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {truncated && <p class="hint">Showing {LIMIT} of more than {LIMIT} orders; older ones may be missing.</p>}
+          </form>
+        )
+      }
+    </main>
+
+    <script>
+      const all = document.getElementById('select-all') as HTMLInputElement | null;
+      const boxes = () => document.querySelectorAll<HTMLInputElement>('input[name="id"]');
+      all?.addEventListener('change', () => boxes().forEach((b) => (b.checked = all.checked)));
+      // Typing a tracking number selects that row for the bulk action.
+      document.querySelectorAll<HTMLInputElement>('input[name^="tracking_"]').forEach((input) =>
+        input.addEventListener('input', () => {
+          const box = input.closest('tr')?.querySelector<HTMLInputElement>('input[name="id"]');
+          if (box && input.value.trim()) box.checked = true;
+        }),
+      );
+    </script>
+
+    <style>
+      .wrap {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .top {
+        border-bottom: 1px solid var(--line);
+      }
+      .bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 18px;
+        padding-bottom: 18px;
+        gap: 16px;
+      }
+      .wordmark {
+        text-decoration: none;
+        font-weight: 200;
+        letter-spacing: 0.32em;
+        font-size: 20px;
+      }
+      .wordmark span {
+        letter-spacing: 0.1em;
+        font-size: 13px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 500;
+        margin-left: 6px;
+      }
+      .who {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 40px 0 24px;
+      }
+      h1 {
+        margin: 0;
+        font-weight: 200;
+        font-size: 44px;
+      }
+      .exports {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .exports .btn {
+        min-height: 44px;
+        padding: 10px 20px;
+        font-size: 15px;
+      }
+      .notice {
+        background: var(--surface);
+        border: 1px solid var(--accent);
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin: 0 0 20px;
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px 16px;
+        margin-bottom: 20px;
+      }
+      .filters,
+      .refresh {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+      }
+      .filters a {
+        text-decoration: none;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 14px;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .filters a span {
+        color: var(--muted);
+      }
+      .filters a[aria-current='page'] {
+        background: var(--text);
+        color: var(--bg);
+        border-color: var(--text);
+        font-weight: 600;
+      }
+      .filters a[aria-current='page'] span {
+        color: var(--bg);
+      }
+      .bulk {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .btn.small {
+        min-height: 40px;
+        padding: 8px 16px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      .hint {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .empty {
+        color: var(--muted);
+        padding: 48px 0;
+      }
+      .table-wrap {
+        position: relative;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        margin-bottom: 48px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 500;
+        background: var(--surface);
+        white-space: nowrap;
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      tbody tr:hover {
+        background: var(--surface-band);
+      }
+      td strong {
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .sub {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+      .addr {
+        min-width: 200px;
+      }
+      .status {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+        white-space: nowrap;
+      }
+      .status-unfulfilled {
+        background: var(--accent);
+        color: var(--on-accent);
+      }
+      .status-shipped {
+        background: var(--line-mid);
+        color: var(--text);
+      }
+      .ship {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .ship input {
+        width: 170px;
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        padding: 8px 10px;
+        min-height: 40px;
+        font-size: 14px;
+      }
+      input[type='checkbox'] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--accent);
+      }
+      .mono {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 13px;
+      }
+    </style>
+  </body>
+</html>

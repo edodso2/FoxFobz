@@ -1,0 +1,20 @@
+* text=auto
+
+# KiCad files are text; keep LF so diffs stay clean
+*.kicad_pro  text eol=lf
+*.kicad_sch  text eol=lf
+*.kicad_pcb  text eol=lf
+*.kicad_sym  text eol=lf
+*.kicad_mod  text eol=lf
+*-lib-table  text eol=lf
+
+# Binary: never diff/merge
+*.pdf   binary
+*.step  binary
+*.stp   binary
+*.wrl   binary
+*.zip   binary
+*.pages binary
+*.png   binary
+*.hex   binary
+*.bin   binary

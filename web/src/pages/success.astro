@@ -1,0 +1,252 @@
+---
+import type Stripe from 'stripe';
+import Base from '../layouts/Base.astro';
+import { getStripe, formatMoney } from '../lib/stripe';
+import { site } from '../site.config';
+
+export const prerender = false;
+
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+
+const sessionId = Astro.url.searchParams.get('session_id') ?? '';
+let session: Stripe.Checkout.Session | null = null;
+
+if (/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) {
+  try {
+    session = await getStripe().checkout.sessions.retrieve(sessionId, { expand: ['line_items'] });
+  } catch (err) {
+    console.warn('Could not load Checkout Session', sessionId, err);
+  }
+}
+
+const currency = session?.currency ?? 'usd';
+const items = session?.line_items?.data ?? [];
+const totals = session?.total_details;
+const shipping = session?.collected_information?.shipping_details;
+const addr = shipping?.address;
+const fitment =
+  session?.metadata?.year && session?.metadata?.body_style
+    ? `${session.metadata.year} Mustang ${session.metadata.body_style}`
+    : null;
+const processing = session?.payment_status === 'unpaid';
+---
+
+<Base title="Thank you — Fox Fobz" noindex>
+  <section class="container success">
+    {
+      session ? (
+        <>
+          <div class="eyebrow">{processing ? 'Order received' : 'Order confirmed'}</div>
+          <h1>Thanks{session.customer_details?.name ? `, ${session.customer_details.name.split(' ')[0]}` : ''}.</h1>
+          <p class="lede">
+            {processing
+              ? 'Your payment is processing. We’ll email you as soon as it clears.'
+              : 'You’ll get a receipt by email now, and tracking when it ships.'}
+            {session.customer_details?.email && (
+              <>
+                {' '}
+                Both go to <strong>{session.customer_details.email}</strong>.
+              </>
+            )}
+          </p>
+
+          <div class="grid">
+            <div class="card">
+              <h2 class="label">Order summary</h2>
+              <ul class="items">
+                {items.map((li) => (
+                  <li>
+                    <span>
+                      {li.description}
+                      {(li.quantity ?? 1) > 1 && <span class="dim"> × {li.quantity}</span>}
+                      {fitment && <span class="dim block">For {fitment}</span>}
+                    </span>
+                    <span>{formatMoney(li.amount_subtotal, currency)}</span>
+                  </li>
+                ))}
+              </ul>
+              <dl class="totals">
+                <div>
+                  <dt>Subtotal</dt>
+                  <dd>{formatMoney(session.amount_subtotal, currency)}</dd>
+                </div>
+                {totals?.amount_discount ? (
+                  <div>
+                    <dt>Discount</dt>
+                    <dd>−{formatMoney(totals.amount_discount, currency)}</dd>
+                  </div>
+                ) : null}
+                <div>
+                  <dt>Shipping</dt>
+                  <dd>{formatMoney(totals?.amount_shipping ?? 0, currency)}</dd>
+                </div>
+                <div>
+                  <dt>Tax</dt>
+                  <dd>{formatMoney(totals?.amount_tax ?? 0, currency)}</dd>
+                </div>
+                <div class="total">
+                  <dt>Total</dt>
+                  <dd>{formatMoney(session.amount_total, currency)}</dd>
+                </div>
+              </dl>
+            </div>
+
+            {addr && (
+              <div class="card">
+                <h2 class="label">Shipping to</h2>
+                <address>
+                  {shipping?.name}
+                  <br />
+                  {addr.line1}
+                  {addr.line2 && (
+                    <>
+                      <br />
+                      {addr.line2}
+                    </>
+                  )}
+                  <br />
+                  {addr.city}, {addr.state} {addr.postal_code}
+                </address>
+                <p class="dim small">
+                  See our <a href="/shipping">shipping policy</a> for timing. Wrong address? Email{' '}
+                  <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> right away.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div class="next">
+            <a class="btn btn-ghost" href="/#install">
+              Watch the install video
+            </a>
+            <a class="btn btn-ghost" href="/">
+              Back to Fox Fobz
+            </a>
+          </div>
+        </>
+      ) : (
+        <>
+          <div class="eyebrow">Thank you</div>
+          <h1>Thanks for your order.</h1>
+          <p class="lede">
+            We couldn’t load your order details here, but if your payment went through you’ll get a receipt by email now,
+            and tracking when it ships. Questions? Email <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>.
+          </p>
+          <div class="next">
+            <a class="btn btn-ghost" href="/">
+              Back to Fox Fobz
+            </a>
+          </div>
+        </>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .success {
+    padding-top: 96px;
+    padding-bottom: 112px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 960px;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 200;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+  }
+  .lede {
+    max-width: 640px;
+    color: var(--text-lede);
+  }
+  .lede strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-top: 16px;
+  }
+  .card {
+    flex: 1 1 340px;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card h2 {
+    margin: 0;
+    font-weight: 400;
+  }
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .items li,
+  .totals div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .items li {
+    font-size: 17px;
+    font-weight: 300;
+  }
+  .totals {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--text-soft);
+  }
+  dd {
+    margin: 0;
+  }
+  .total {
+    padding-top: 8px;
+    font-size: 18px;
+    color: var(--text);
+  }
+  address {
+    font-style: normal;
+    font-size: 17px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .dim {
+    color: var(--muted);
+  }
+  .block {
+    display: block;
+    font-size: 14px;
+  }
+  .small {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 16px;
+  }
+  @media (max-width: 640px) {
+    .success {
+      padding-top: 56px;
+      padding-bottom: 72px;
+    }
+  }
+</style>

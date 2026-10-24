@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "foxfobz-website",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  // The Astro adapter fills in the assets directory at build time.
+  "assets": { "binding": "ASSETS" },
+  "observability": { "enabled": true },
+  // Secrets are set with `wrangler secret put`; keep dashboard-set values on deploy.
+  "keep_vars": true,
+  // Serve only on foxfobz.com, so Cloudflare Access can't be bypassed via *.workers.dev.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "foxfobz.com", "custom_domain": true },
+    { "pattern": "www.foxfobz.com", "custom_domain": true }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "foxfobz",
+      // Not a secret. Paste the ID printed by `npx wrangler d1 create foxfobz`.
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

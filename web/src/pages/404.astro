@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found — Fox Fobz" noindex>
+  <section class="container nf">
+    <div class="eyebrow">404</div>
+    <h1>This road doesn’t go anywhere.</h1>
+    <div><a class="btn btn-primary" href="/">Back to Fox Fobz</a></div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-top: 112px;
+    padding-bottom: 128px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 200;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+  }
+</style>

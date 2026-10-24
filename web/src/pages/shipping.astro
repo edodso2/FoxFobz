@@ -1,0 +1,41 @@
+---
+import Policy from '../layouts/Policy.astro';
+import { product, site } from '../site.config';
+---
+
+<Policy title="Shipping" description="Where Fox Fobz ships, how long it takes, and how tracking works.">
+  <h2>Where we ship</h2>
+  <p>We currently ship to addresses in the United States only, including APO/FPO/DPO addresses.</p>
+
+  <h2>When your order ships</h2>
+  <p>
+    Orders ship {product.shippingWindow} after payment. Orders placed on weekends or holidays begin processing the next
+    business day.
+  </p>
+
+  <h2>Carriers and cost</h2>
+  <p>
+    We ship with USPS or UPS. Shipping options and their cost are shown at checkout before you pay. Sales tax is
+    calculated at checkout based on your shipping address.
+  </p>
+
+  <h2>Emails you’ll get</h2>
+  <ul>
+    <li><strong>Receipt</strong> — sent by our payment processor, Stripe, as soon as your payment goes through.</li>
+    <li><strong>Tracking</strong> — sent when we buy your shipping label, with a link to follow the package.</li>
+  </ul>
+  <p>Check your spam folder if you don’t see them. Both go to the email address you entered at checkout.</p>
+
+  <h2>Address problems</h2>
+  <p>
+    Double-check your address at checkout. If you spot a mistake, email
+    <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> right away — we can fix it until the label is printed.
+    Packages returned to us as undeliverable because of an incorrect address can be reshipped at your cost.
+  </p>
+
+  <h2>Lost or damaged packages</h2>
+  <p>
+    If tracking stops moving for more than 7 days, shows delivered but you can’t find it, or the package arrives damaged,
+    email us with your order details (and photos of any damage). We’ll work with the carrier and make it right.
+  </p>
+</Policy>

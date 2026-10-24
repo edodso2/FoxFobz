@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /api/
+Disallow: /success
+Disallow: /cancel
+
+Sitemap: https://foxfobz.com/sitemap.xml
