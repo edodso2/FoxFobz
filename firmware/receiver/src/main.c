@@ -10,6 +10,9 @@
 #include <zephyr/bluetooth/uuid.h>
 #include <zephyr/bluetooth/gatt.h>
 
+/* Command bytes, GATT UUIDs, fob packet layout: firmware/common/include/foxfobz/protocol.h */
+#include <foxfobz/protocol.h>
+
 #define DEVICE_NAME     CONFIG_BT_DEVICE_NAME
 #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
 
@@ -102,10 +105,6 @@ static void door_drive(struct door *d, bool unlock)
     k_work_reschedule(&d->run_off_work, K_MSEC(MOTOR_RUN_TOTAL_MS));
 }
 
-/* Command bytes — must match Flutter BleConstants and the fob firmware */
-#define CMD_UNLOCK 0x01
-#define CMD_LOCK   0x02
-
 /* Single entry point for lock/unlock, whether it came from the app (GATT
  * write) or a fob (broadcast). Returns -EINVAL for unknown commands. */
 static int handle_command(uint8_t cmd)
@@ -147,12 +146,6 @@ static void unlock_input_isr(const struct device *dev, struct gpio_callback *cb,
 {
     k_work_reschedule(&unlock_input_work, K_MSEC(UNLOCK_DEBOUNCE_MS));
 }
-
-/* UUIDs — must match Flutter BleConstants */
-#define CMD_SERVICE_UUID_VAL \
-    BT_UUID_128_ENCODE(0x46F00001, 0x4200, 0x4C45, 0x9876, 0xABCDEF000000)
-#define CMD_CHAR_UUID_VAL \
-    BT_UUID_128_ENCODE(0x46F00002, 0x4200, 0x4C45, 0x9876, 0xABCDEF000000)
 
 #define CMD_SERVICE_UUID BT_UUID_DECLARE_128(CMD_SERVICE_UUID_VAL)
 #define CMD_CHAR_UUID    BT_UUID_DECLARE_128(CMD_CHAR_UUID_VAL)
@@ -224,18 +217,6 @@ BT_CONN_CB_DEFINE(conn_callbacks) = {
     .connected    = connected,
     .disconnected = disconnected,
 };
-
-/* Fob broadcast packet (manufacturer-specific advertising data) — must match
- * fob_firmware/src/main.c and fob_hub/docs/ble-protocol.md.
- *
- *   [0..1] company ID 0xFFFF (LE)   [2..3] magic "FX"   [4] version
- *   [5]    command byte             [6..7] press counter (LE)
- */
-#define FOB_COMPANY_ID    0xFFFF
-#define FOB_MAGIC_0       'F'
-#define FOB_MAGIC_1       'X'
-#define FOB_PROTO_VERSION 0x01
-#define FOB_MFG_LEN       8
 
 /* A fob repeats each press for ~500ms; packets with the same counter from
  * the same fob within this window are the same press. */

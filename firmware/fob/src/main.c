@@ -5,24 +5,8 @@
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/bluetooth/bluetooth.h>
 
-/* Fob broadcast packet (manufacturer-specific advertising data) — must match
- * the receiver's FOB_* defines and fob_hub/docs/ble-protocol.md.
- *
- *   [0..1] company ID 0xFFFF (LE)   [2..3] magic "FX"   [4] version
- *   [5]    command byte             [6..7] press counter (LE)
- */
-#define FOB_COMPANY_ID    0xFFFF  /* Bluetooth SIG ID reserved for testing */
-#define FOB_MAGIC_0       'F'
-#define FOB_MAGIC_1       'X'
-#define FOB_PROTO_VERSION 0x01
-
-#define FOB_MFG_CMD_IDX     5
-#define FOB_MFG_COUNTER_IDX 6
-#define FOB_MFG_LEN         8
-
-/* Command bytes — same as the app's BleConstants */
-#define CMD_UNLOCK 0x01
-#define CMD_LOCK   0x02
+/* Packet layout and command bytes: firmware/common/include/foxfobz/protocol.h */
+#include <foxfobz/protocol.h>
 
 /* Each press is broadcast for ADV_BURST_MS at a 20-30ms interval, so the
  * receiver sees it many times; it de-dupes on the press counter. */
