@@ -12,6 +12,7 @@
 
 /* Command bytes, GATT UUIDs, fob packet layout: firmware/common/include/foxfobz/protocol.h */
 #include <foxfobz/protocol.h>
+#include <app_version.h>
 
 #define DEVICE_NAME     CONFIG_BT_DEVICE_NAME
 #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
@@ -325,6 +326,8 @@ static const struct bt_le_scan_param scan_param = {
 int main(void)
 {
     int err;
+
+    printk("FoxFobz receiver fw %s (build %s)\n", APP_VERSION_STRING, FOXFOBZ_FW_BUILD);
 
     /* GPIO setup */
     gpio0 = DEVICE_DT_GET(DT_NODELABEL(gpio0));

@@ -7,6 +7,7 @@
 
 /* Packet layout and command bytes: firmware/common/include/foxfobz/protocol.h */
 #include <foxfobz/protocol.h>
+#include <app_version.h>
 
 /* Each press is broadcast for ADV_BURST_MS at a 20-30ms interval, so the
  * receiver sees it many times; it de-dupes on the press counter. */
@@ -133,6 +134,8 @@ static int button_init(struct fob_button *b)
 int main(void)
 {
     int err;
+
+    printk("FoxFobz fob fw %s (build %s)\n", APP_VERSION_STRING, FOXFOBZ_FW_BUILD);
 
     k_work_init_delayable(&adv_stop_work, adv_stop_fn);
 
