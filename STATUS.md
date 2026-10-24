@@ -25,8 +25,7 @@ Carried over from the consolidation (2026-10-23):
 - [ ] **Receiver KiCad:** no title block (Rev / date / title). Set Rev A before ordering ([process](hardware/README.md#revisions-and-releases)).
 - [ ] **Receiver KiCad:** `BTS70081EPAXUMA1.pretty` is unused on this board.
 - [ ] **Receiver FW:** never fire both lock drivers + trunk at once (~19 A > 15 A fuse/D1). Stagger outputs.
-- [ ] **Docs:** [early-pin-plan](hardware/receiver/docs/early-pin-plan.md) and [early-bom](hardware/receiver/docs/early-bom.csv) are stale (SPI drivers, LP2985 regulator, P0.24 listed twice). Kept for history; the schematic wins.
-- [ ] **Docs:** phase 2/4/5 docs still assume nRF52840 on the fob ([ADR 0003](docs/decisions/0003-mdbt42t-fob.md)).
-- [ ] **Web:** D1 `database_id` is still the placeholder in `web/wrangler.jsonc`, and `src/site.config.ts` still has `[PLACEHOLDER]` values.
-- [ ] **App:** Android `MainActivity.kt` still lives in package `com.example.fob_hub`.
+- [ ] **Security (open):** read `NRF_FICR->INFO.VARIANT` on received MDBT50Q (and MDBT42T) modules and record the silicon revision (Rev 2 has an APPROTECT glitch bypass). See [security.md](docs/security.md#firmware-integrity--decided).
+- [ ] **Security (open):** fob authentication for broadcast packets (`protocol/v2`), needed before M5. See [security.md](docs/security.md#fob--receiver-broadcast--open).
+- [ ] **Production (open):** provisioning jig design, in-house vs service; SWD header vs pogo pads on production boards.
 - [ ] **ADRs:** missing rationale for 0002, 0004 and 0007.

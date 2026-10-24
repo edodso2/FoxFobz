@@ -8,4 +8,4 @@
 - Compliance shrinks to Part 15B (unintentional radiator) + SDoC + labeling with the module FCC IDs. See [production/](../production/).
 - Antenna keep-out on all layers per the Raytac datasheet. Raytac will review layouts for free.
 - Modules are consigned to JLC (pre-ordered).
-- Source: [plan v2](../product/plan-v2.md), [plan v3](../product/plan-v3-draft.md), [production notes](../production/nrf52840-production-notes.md).
+- See [production notes](../production/nrf52840-production-notes.md) and [compliance](../production/compliance.md).

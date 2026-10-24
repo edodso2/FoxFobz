@@ -93,4 +93,4 @@ sudo xattr -dr com.apple.quarantine ~/ncs ~/zephyr-sdk   # stop Gatekeeper block
 ## Later
 
 - `boards/foxfobz/`: out-of-tree Zephyr boards for the custom PCBs (`foxfobz_receiver` with board revisions `A`, `B`…, `foxfobz_fob`), so one tree can target dev boards and every PCB revision.
-- Production items (deep sleep, MCUboot signing, challenge-response, provisioning, APPROTECT): see [docs/product/phases/phase-4-firmware-finalization.md](../docs/product/phases/phase-4-firmware-finalization.md).
+- Production items (deep sleep, MCUboot signing, challenge-response, provisioning, APPROTECT): see [docs/security.md](../docs/security.md).

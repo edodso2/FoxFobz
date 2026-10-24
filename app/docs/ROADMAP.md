@@ -1,6 +1,6 @@
 # App Roadmap
 
-> Product-wide milestones and live status: [docs/roadmap.md](../../docs/roadmap.md) and [STATUS.md](../../STATUS.md). This file tracks app-only checklists; the "6 phases" below refer to the original plan in [docs/product/plan-v2.md](../../docs/product/plan-v2.md).
+> Product-wide milestones and live status: [docs/roadmap.md](../../docs/roadmap.md) and [STATUS.md](../../STATUS.md). This file tracks app-only checklists; the "6 phases" below refer to the original plan (archived in the old planning repo). Security model: [docs/security.md](../../docs/security.md).
 
 ## Current Status
 

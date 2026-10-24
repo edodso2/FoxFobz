@@ -23,8 +23,8 @@ A BLE key fob + receiver that adds keyless lock/unlock to classic cars, starting
 | [app/](app/) | iOS app (Flutter) | `pubspec.yaml` version | `app/vX.Y.Z` |
 | [web/](web/) | foxfobz.com (Astro + Cloudflare Workers + Stripe) | `package.json` version | `web/vX.Y.Z` |
 | [testing/](testing/) | Bench tests, per-vehicle field-test logs, templates | — | — |
-| [docs/](docs/) | Roadmap, protocol, decisions, product plan, production, datasheets | — | — |
-| [business/](business/) | Business plan, LLC setup, operations (deferred) | — | — |
+| [docs/](docs/) | Roadmap, security, protocol, decisions, backlog, production, datasheets | — | — |
+| [business/](business/) | Project brief (shareable overview), business plan, LLC setup, operations | — | — |
 
 ## Versioning
 

@@ -2,18 +2,18 @@
 
 Milestones are **deliverables**, not a sequence. Workstreams run in parallel. JLC lead times, parts pre-orders and garage time mean several are always in flight. Live state is in [STATUS.md](../STATUS.md).
 
-The original phase-by-phase plan is kept in [product/plan-v2.md](product/plan-v2.md) and [product/phases/](product/phases/). Those are now **topic references**: requirements, security model, PCB requirements, compliance. They are not a schedule.
+The original phase-by-phase plan lives in the archived planning repo. What's still relevant moved to [security.md](security.md), [production/compliance.md](production/compliance.md), [hardware/fob/](../hardware/fob/README.md) and [backlog.md](backlog.md).
 
 ## Workstreams
 
 | Workstream | Lives in | Reference spec |
 |---|---|---|
 | Car testing (dev rig) | `hardware/dev-rig/`, `testing/` | [bench tests](../testing/bench/mustang-1988-bench-tests.md) |
-| Receiver HW | `hardware/receiver/` | [phase 5](product/phases/phase-5-custom-pcb-design.md) |
-| Fob HW | `hardware/fob/` | [phase 5](product/phases/phase-5-custom-pcb-design.md) |
-| Receiver FW | `firmware/receiver/` | [phase 2](product/phases/phase-2-fob-board-dual-role-receiver.md), [phase 4](product/phases/phase-4-firmware-finalization.md) |
-| Fob FW | `firmware/fob/` | [phase 4](product/phases/phase-4-firmware-finalization.md) |
-| App | `app/` | [app roadmap](../app/docs/ROADMAP.md), [phase 3](product/phases/phase-3-app-finalization.md) |
+| Receiver HW | `hardware/receiver/` | KiCad schematic, [TODO.MD](../hardware/receiver/TODO.MD) |
+| Fob HW | `hardware/fob/` | [fob requirements](../hardware/fob/README.md) |
+| Receiver FW | `firmware/receiver/` | [protocol](protocol/ble-protocol.md), [security](security.md) |
+| Fob FW | `firmware/fob/` | [protocol](protocol/ble-protocol.md), [security](security.md) |
+| App | `app/` | [app roadmap](../app/docs/ROADMAP.md), [app phase 3](../app/docs/phase-3-app.md) |
 | Web | `web/` | [web README](../web/README.md) |
 | Business | `business/` | deferred |
 
@@ -50,4 +50,4 @@ Receiver and fob pass testing on multiple cars in multiple environments.
   - [ ] Every passing combination recorded in [compatibility.md](compatibility.md)
 
 ### M6 — Launch prep (deferred)
-LLC, Stripe/site completion, compliance (FCC Part 15B / SDoC, see [production/](production/)), production provisioning, marketing. Not planned until M5 passes.
+LLC, Stripe/site completion, compliance (FCC Part 15B / SDoC, see [compliance](production/compliance.md)), production provisioning, marketing. Not planned until M5 passes.

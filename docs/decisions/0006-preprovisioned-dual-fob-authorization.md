@@ -9,4 +9,4 @@
 **Consequences.**
 - A provisioning jig and production tooling are needed (open question).
 - Check the nRF52840 silicon revision (Rev 2 has a published APPROTECT glitch bypass).
-- Full detail: [plan v2 open questions](../product/plan-v2.md#open-questions--decisions), [phase 4](../product/phases/phase-4-firmware-finalization.md), [phase 3](../product/phases/phase-3-app-finalization.md).
+- Full detail: [security.md](../security.md). Fob authentication must be redesigned for broadcast packets (see [0004](0004-fob-broadcast-not-connection.md)); the app side is in [app/docs/phase-3-app.md](../../app/docs/phase-3-app.md).
