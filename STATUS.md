@@ -19,12 +19,7 @@ _Last updated: 2026-10-23_. Update this whenever a workstream changes state. Mil
 
 Carried over from the consolidation (2026-10-23):
 
-- [ ] **Receiver KiCad:** one 3D model uses an absolute path that no longer exists (`/Users/ericdodson/Development/easy_eda_converter/.../TO-277...wrl`), so it's missing in the 3D view.
-- [ ] **Receiver KiCad:** 3D model paths mix `${KICAD9_3DMODEL_DIR}` and `${KICAD10_3DMODEL_DIR}`. Standardize on KICAD10.
-- [ ] **Receiver KiCad:** `sym-lib-table` lacks entries for SL1545, 3568 and MDBT50Q-1MV2. It works only because the schematic carries cached copies.
 - [ ] **Receiver KiCad:** no title block (Rev / date / title). Set Rev A before ordering ([process](hardware/README.md#revisions-and-releases)).
-- [ ] **Receiver KiCad:** `BTS70081EPAXUMA1.pretty` is unused on this board.
-- [ ] **Receiver FW:** never fire both lock drivers + trunk at once (~19 A > 15 A fuse/D1). Stagger outputs.
 - [ ] **Security (open):** read `NRF_FICR->INFO.VARIANT` on received MDBT50Q (and MDBT42T) modules and record the silicon revision (Rev 2 has an APPROTECT glitch bypass). See [security.md](docs/security.md#firmware-integrity--decided).
 - [ ] **Security (open):** fob authentication for broadcast packets (`protocol/v2`), needed before M5. See [security.md](docs/security.md#fob--receiver-broadcast--open).
 - [ ] **Production (open):** provisioning jig design, in-house vs service; SWD header vs pogo pads on production boards.

@@ -174,7 +174,7 @@
 		(uuid "1f65311f-0716-444e-be95-faa106809cc5")
 	)
 	(embedded_fonts no)
-	(model "/Users/ericdodson/Development/easy_eda_converter/output/jlc.3dshapes/TO-277_3P-L5.4-W4.0-H1.2-LS6.5-BR.wrl"
+	(model "${KIPRJMOD}/SL1545.pretty/TO-277_3P-L5.4-W4.0-H1.2-LS6.5-BR.step"
 		(offset
 			(xyz 0 0 0)
 		)

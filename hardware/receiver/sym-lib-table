@@ -4,4 +4,7 @@
   (lib (name "DRV8873HPWPRQ1")(type "KiCad")(uri "${KIPRJMOD}/DRV8873HPWPRQ1.pretty/DRV8873HPWPRQ1.kicad_sym")(options "")(descr ""))
   (lib (name "0367831201")(type "KiCad")(uri "${KIPRJMOD}/0367831201.pretty/0367831201.kicad_sym")(options "")(descr ""))
   (lib (name "39301120")(type "KiCad")(uri "${KIPRJMOD}/39301120.pretty/39301120.kicad_sym")(options "")(descr "Molex Mini-Fit Jr. 2x6 R/A header"))
+  (lib (name "SL1545")(type "KiCad")(uri "${KIPRJMOD}/SL1545.pretty/SL1545.kicad_sym")(options "")(descr ""))
+  (lib (name "3568")(type "KiCad")(uri "${KIPRJMOD}/3568.pretty/3568.kicad_sym")(options "")(descr ""))
+  (lib (name "MDBT50Q-1MV2")(type "KiCad")(uri "${KIPRJMOD}/MDBT50Q-1MV2.pretty/MDBT50Q-1MV2.kicad_sym")(options "")(descr ""))
 )
